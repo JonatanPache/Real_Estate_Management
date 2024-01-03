@@ -1,5 +1,46 @@
 <?php include 'layouts/top.php'; ?>
 
+<?php 
+    if(isset($_SESSION['admin'])){
+        header('location: '.ADMIN_URL.'dashboard.php');
+    }   
+?>
+
+<?php
+    if (isset($_POST['form_login'])) {
+        try {
+            if ($_POST['email'] == '') {
+                throw new Exception("Email can not be empty");
+            }
+            if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+                throw new Exception("Email is invalid");
+            }
+
+            if ($_POST['password'] == '') {
+                throw new Exception("Password can not be empty");
+            }
+            $q = $pdo->prepare("SELECT * FROM users WHERE email=? AND role=?");
+            $q->execute([$_POST['email'], 'admin']);
+            $total = $q->rowCount();
+            if (!$total) {
+                throw new Exception("Email is not found");
+            } else {
+                $result = $q->fetchAll(PDO::FETCH_ASSOC);
+                foreach ($result as $row) {
+                    $password = $row['password'];
+                    if (!password_verify($_POST['password'], $password)) {
+                        throw new Exception("Password does not match");
+                    }
+                }
+            }
+            $_SESSION['admin'] = $row;
+            header('location: ' . ADMIN_URL . 'dashboard.php');
+        } catch (Exception $e) {
+            $error_message = $e->getMessage();
+        }
+    }
+?>
+
 <section class="section">
     <div class="container container-login">
         <div class="row">
@@ -9,15 +50,23 @@
                         <h4 class="text-center">Admin Panel Login</h4>
                     </div>
                     <div class="card-body card-body-auth">
-                        <form method="POST" action="index.html">
+                        <?php
+                        if (isset($error_message)) {
+                            ?> <script> alert("<?php echo $error_message; ?>") </script> <?php
+                        }
+                        if(isset($success_message)){
+
+                        }
+                        ?>
+                        <form method="POST" action="">
                             <div class="form-group">
-                                <input type="email" class="form-control" name="email" placeholder="Email Address" value="" autofocus>
+                                <input type="email" class="form-control" name="email" placeholder="Email Address" value="" autocomplete="off" autofocus>
                             </div>
                             <div class="form-group">
-                                <input type="password" class="form-control" name="password" placeholder="Password">
+                                <input type="password" class="form-control" name="password" autocomplete="off" placeholder="Password">
                             </div>
                             <div class="form-group">
-                                <button type="submit" class="btn btn-primary btn-lg w_100_p">
+                                <button type="submit" class="btn btn-primary btn-lg w_100_p" name="form_login">
                                     Login
                                 </button>
                             </div>
@@ -29,7 +78,9 @@
                                 </div>
                             </div>
                         </form>
+
                     </div>
+
                 </div>
             </div>
         </div>

@@ -1,5 +1,11 @@
 <?php include 'layouts/top.php'; ?>
 
+<?php
+if(!isset($_SESSION['admin'])){
+    header('location: '.ADMIN_URL.'login.php');
+}
+?>
+
 <div class="main-content">
     <section class="section">
         <div class="section-header">

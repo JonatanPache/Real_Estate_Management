@@ -1,3 +1,1 @@
-config.php
-dist/*
-uploads/*
+config/config.php

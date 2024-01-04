@@ -1,44 +1,37 @@
 <?php include 'layouts/top.php'; ?>
 
-<?php 
-    if(isset($_SESSION['admin'])){
-        header('location: '.ADMIN_URL.'dashboard.php');
-    }   
+<?php
+$statement = $pdo->prepare("SELECT * FROM users WHERE email=? AND token=?");
+$statement->execute([$_REQUEST['email'], $_REQUEST['token']]);
+$total = $statement->rowCount();
+if (!$total) {
+    header('location: ' . ADMIN_URL . 'login.php');
+    exit;
+}
 ?>
 
 <?php
-    if (isset($_POST['form_reset_password'])) {
-        try {
-            if ($_POST['email'] == '') {
-                throw new Exception("Email can not be empty");
-            }
-            if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-                throw new Exception("Email is invalid");
-            }
-
-            if ($_POST['password'] == '') {
-                throw new Exception("Password can not be empty");
-            }
-            $q = $pdo->prepare("SELECT * FROM users WHERE email=? AND role=?");
-            $q->execute([$_POST['email'], 'admin']);
-            $total = $q->rowCount();
-            if (!$total) {
-                throw new Exception("Email is not found");
-            } else {
-                $result = $q->fetchAll(PDO::FETCH_ASSOC);
-                foreach ($result as $row) {
-                    $password = $row['password'];
-                    if (!password_verify($_POST['password'], $password)) {
-                        throw new Exception("Password does not match");
-                    }
-                }
-            }
-            $_SESSION['admin'] = $row;
-            header('location: ' . ADMIN_URL . 'dashboard.php');
-        } catch (Exception $e) {
-            $error_message = $e->getMessage();
+if (isset($_POST['form_reset_password'])) {
+    try {
+        if ($_POST['password'] == '' || $_POST['retype_password'] == '') {
+            throw new Exception("Password can not be empty");
         }
+
+        if ($_POST['password'] != $_POST['retype_password']) {
+            throw new Exception("Passwords does not match");
+        }
+
+        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+
+        $statement = $pdo->prepare("UPDATE users SET token=?, password=? WHERE email=? AND token=?");
+        $statement->execute(['', $password, $_REQUEST['email'], $_REQUEST['token']]);
+
+        header('location: ' . ADMIN_URL . 'login.php');
+        exit;
+    } catch (Exception $e) {
+        $error_message = $e->getMessage();
     }
+}
 ?>
 
 <section class="section">
@@ -52,9 +45,10 @@
                     <div class="card-body card-body-auth">
                         <?php
                         if (isset($error_message)) {
-                            ?> <script> alert("<?php echo $error_message; ?>") </script> <?php
-                        }
-                        if(isset($success_message)){
+                        ?> <script> alert("<?php echo $error_message; ?>")</script> <?php
+                        } 
+                        if (isset($success_message)) {
+                            ?> <script> alert("<?php echo $error_message; ?>")</script> <?php
 
                         }
                         ?>

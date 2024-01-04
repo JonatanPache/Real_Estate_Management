@@ -1,10 +1,11 @@
 <?php include 'layouts/top.php'; ?>
-<?php
 
+<?php
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 ?>
+
 <?php
 if (isset($_POST['form_forget_password'])) {
     try {
@@ -22,6 +23,8 @@ if (isset($_POST['form_forget_password'])) {
             throw new Exception("Email is not found");
         }
         $token = time();
+        $statement = $pdo->prepare("UPDATE users SET token=? WHERE email=?");
+        $statement->execute([$token,$_POST['email']]);
         $email_message = 'Please click on the following link in order to reset the password: ';
         $email_message .= '<a href="'.ADMIN_URL.'reset-password.php?email='.$_POST['email'].'&token='.$token.'">Reset Password</a>';
         $mail = new PHPMailer(true);

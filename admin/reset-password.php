@@ -7,7 +7,7 @@
 ?>
 
 <?php
-    if (isset($_POST['form_login'])) {
+    if (isset($_POST['form_reset_password'])) {
         try {
             if ($_POST['email'] == '') {
                 throw new Exception("Email can not be empty");
@@ -47,7 +47,7 @@
             <div class="col-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4">
                 <div class="card card-primary border-box">
                     <div class="card-header card-header-auth">
-                        <h4 class="text-center">Admin Panel Login</h4>
+                        <h4 class="text-center">Reset Password</h4>
                     </div>
                     <div class="card-body card-body-auth">
                         <?php
@@ -60,22 +60,15 @@
                         ?>
                         <form method="POST" action="">
                             <div class="form-group">
-                                <input type="email" class="form-control" name="email" placeholder="Email Address" value="" autocomplete="off" autofocus>
-                            </div>
-                            <div class="form-group">
                                 <input type="password" class="form-control" name="password" autocomplete="off" placeholder="Password">
                             </div>
                             <div class="form-group">
-                                <button type="submit" class="btn btn-primary btn-lg w_100_p" name="form_login">
-                                    Login
-                                </button>
+                                <input type="password" class="form-control" name="retype_password" autocomplete="off" placeholder="Retype Password">
                             </div>
                             <div class="form-group">
-                                <div>
-                                    <a href="<?php echo ADMIN_URL; ?>forget-password.php">
-                                        Forget Password?
-                                    </a>
-                                </div>
+                                <button type="submit" class="btn btn-primary btn-lg w_100_p" name="form_reset_password">
+                                    Submit
+                                </button>
                             </div>
                         </form>
 

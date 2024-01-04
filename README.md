@@ -13,3 +13,7 @@
 
 - Database
 Run the file `db/script.sql` on phpmyadmin.
+
+- Packages
+
+`composer install`

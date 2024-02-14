@@ -3,6 +3,7 @@
 <?php
 if (isset($_POST['form_update'])) {
     try {
+        // update name and email
         if ($_POST['full_name'] == '') {
             throw new Exception("name can not be empty");
         }
@@ -12,8 +13,45 @@ if (isset($_POST['form_update'])) {
         if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
             throw new Exception("Email is invalid");
         }
+
         $statement = $pdo->prepare("UPDATE users SET full_name=?, email=? WHERE id=?");
         $statement->execute([$_POST['full_name'], $_POST['email'], $_SESSION['admin']['id']]);
+
+        
+        if ($_POST['password'] != '' || $_POST['password'] != '') {
+            if ($_POST['password'] != $_POST['password'] ) {
+                throw new Exception("Password does not match");
+            } else {
+                $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+                $statement = $pdo->prepare("UPDATE users SET password=? WHERE id=?");
+                $statement->execute([$password, $_SESSION['admin']['id']]);
+            }
+        }
+
+        // update photo 
+        $path = $_FILES['photo']['name'];
+        $path_tmp = $_FILES['photo']['tmp_name'];
+
+        if( $path != '') {
+            $extension = pathinfo($path, PATHINFO_EXTENSION);
+            $filename = time().".".$extension;
+    
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $mime = finfo_file($finfo, $path_tmp);
+            if($mime == 'image/jpeg' || $mime == 'image/png') {
+                if ($_SESSION['admin']['photo'] != ''){
+                    unlink('../uploads/'.$_SESSION['admin']['photo']);
+                }
+                move_uploaded_file($path_tmp, '../uploads/'.$filename);
+                $statement = $pdo->prepare("UPDATE users SET photo=? WHERE id=?");
+                $statement->execute([$filename, $_SESSION['admin']['id']]);
+                $_SESSION['admin']['photo'] = $filename;
+            } else {
+                throw new Exception("Please upload a valid photo");
+            }
+        }
+
+
         $success_message = 'Profile data is updated successfully';
 
         $_SESSION['admin']['full_name'] = $_POST['full_name'];

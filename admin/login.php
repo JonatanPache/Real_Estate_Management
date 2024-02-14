@@ -55,7 +55,7 @@
                             ?> <script> alert("<?php echo $error_message; ?>") </script> <?php
                         }
                         if(isset($success_message)){
-
+                            ?> <script> alert("<?php echo $success_message; ?>") </script> <?php
                         }
                         ?>
                         <form method="POST" action="">

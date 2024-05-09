@@ -2021,6 +2021,14 @@ h4.resume {
     width: 100%;
 }
 
+.main-part-user a {
+    color: #d92228;
+}
+
+.main-part-user h3 a {
+    size: 20px;
+}
+
 .left-part-user {
     width: 300px;
     display: inline-block;

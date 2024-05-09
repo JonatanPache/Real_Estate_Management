@@ -1,0 +1,3 @@
+RewriteEngine On
+
+RewriteRule  ^select_user                select_user.php             [NC,L]

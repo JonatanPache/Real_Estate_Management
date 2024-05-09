@@ -19,10 +19,12 @@
 
             <div class="main-part-user">
                 <div class="left-part-user">
-                    Customer
+                    <h3><a href="<?php echo BASE_URL; ?>customer-registration.php">Customer Registration</a></h3>
+                    <h3><a href="<?php echo BASE_URL; ?>customer-login.php">Customer Login</a></h3>
                 </div>
                 <div class="right-part-user">
-                    Agent
+                    <h3><a href="<?php echo BASE_URL; ?>agent-registration.php">Agent Registration</a></h3>
+                    <h3><a href="<?php echo BASE_URL; ?>agent-login.php">Agent Login</a></h3>
                 </div>
             </div>
 

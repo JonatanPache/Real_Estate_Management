@@ -1,3 +1,6 @@
 RewriteEngine On
 
-RewriteRule  ^select_user                select_user.php             [NC,L]
+RewriteRule  ^select_user                          select_user.php                       [NC,L]
+RewriteRule  ^customer-registration                customer-registration.php             [NC,L]
+RewriteRule  ^customer-login                       customer-login.php                    [NC,L]
+RewriteRule  ^customer-forget-password             customer-forget-password.php          [NC,L]

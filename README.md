@@ -18,6 +18,36 @@ Run the file `db/script.sql` on phpmyadmin.
 
 `composer install`
 
+## Config Files
+#### Basic Linux
+
+- 
+
+#### Fedora 
+- Services Restart, Start, etc.
+
+```bash
+sudo systemctl restart httpd
+```
+
+- Configuration HTTPD 
+
+```bash
+sudo nano /etc/httpd/conf/httpd.conf
+```
+
+- Log Virtual Host
+
+```bash
+sudo cat /var/log/httpd/udemyrealstate_error.log
+```
+
+- Config Virtual Host
+
+```bash
+sudo nano /etc/httpd/conf/udemyrealestate.conf
+```
+
 ## Issues
 
 ### Config's Virtual Host
